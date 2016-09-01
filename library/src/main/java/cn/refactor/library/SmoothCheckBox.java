@@ -29,6 +29,8 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -423,4 +425,16 @@ public class SmoothCheckBox extends View implements Checkable {
     public interface OnCheckedChangeListener {
         void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked);
     }
+
+  public void setTickColor(@ColorInt int color) {
+    this.mTickPaint.setColor(color);
+    reset();
+    invalidate();
+  }
+
+  public void setCheckedColor(@ColorInt int color) {
+    this.mCheckedColor = color;
+    reset();
+    invalidate();
+  }
 }
