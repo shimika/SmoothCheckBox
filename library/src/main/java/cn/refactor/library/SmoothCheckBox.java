@@ -30,7 +30,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Checkable;
@@ -99,8 +98,6 @@ public class SmoothCheckBox extends View implements Checkable {
         mUnCheckedColor = ta.getColor(R.styleable.SmoothCheckBox_color_unchecked, COLOR_UNCHECKED);
         mStrokeWidth = ta.getDimensionPixelSize(R.styleable.SmoothCheckBox_stroke_width, CompatUtils.dp2px(getContext(), 0));
         ta.recycle();
-
-        Log.d("Test", mTickSpeed + " " + DEF_TICK_SPEED);
 
         mFloorUnCheckedColor = mFloorColor;
         mTickPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -329,7 +326,6 @@ public class SmoothCheckBox extends View implements Checkable {
 
         // invalidate
         if (mDrewDistance < mLeftLineDistance + mRightLineDistance) {
-            Log.d("Test : ", mTickSpeed + "");
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
