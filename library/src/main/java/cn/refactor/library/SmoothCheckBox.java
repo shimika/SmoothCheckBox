@@ -100,6 +100,8 @@ public class SmoothCheckBox extends View implements Checkable {
         mStrokeWidth = ta.getDimensionPixelSize(R.styleable.SmoothCheckBox_stroke_width, CompatUtils.dp2px(getContext(), 0));
         ta.recycle();
 
+        Log.d("Test", mTickSpeed + " " + DEF_TICK_SPEED);
+
         mFloorUnCheckedColor = mFloorColor;
         mTickPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTickPaint.setStyle(Style.STROKE);
@@ -327,6 +329,7 @@ public class SmoothCheckBox extends View implements Checkable {
 
         // invalidate
         if (mDrewDistance < mLeftLineDistance + mRightLineDistance) {
+            Log.d("Test : ", mTickSpeed + "");
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
