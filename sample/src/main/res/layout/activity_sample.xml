@@ -19,12 +19,14 @@
         android:layout_height="40dp"
         android:layout_margin="5dp"
         android:paddingTop="10dp"
+        app:tick_speed="10"
         app:color_checked="@color/colorAccent"/>
 
     <cn.refactor.library.SmoothCheckBox
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="5dp"
+        app:tick_speed="55"
         app:color_checked="#447eeb" />
 
     <cn.refactor.library.SmoothCheckBox
