@@ -23,6 +23,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.os.Build;
@@ -99,20 +100,18 @@ public class SmoothCheckBox extends View implements Checkable {
         mStrokeWidth = ta.getDimensionPixelSize(R.styleable.SmoothCheckBox_stroke_width, CompatUtils.dp2px(getContext(), 0));
         ta.recycle();
 
-        Log.d("Test", mTickSpeed + " " + DEF_TICK_SPEED);
-
         mFloorUnCheckedColor = mFloorColor;
         mTickPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTickPaint.setStyle(Paint.Style.STROKE);
+        mTickPaint.setStyle(Style.STROKE);
         mTickPaint.setStrokeCap(Paint.Cap.ROUND);
         mTickPaint.setColor(tickColor);
 
         mFloorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mFloorPaint.setStyle(Paint.Style.FILL);
+        mFloorPaint.setStyle(Style.STROKE);
         mFloorPaint.setColor(mFloorColor);
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setStyle(Style.FILL);
         mPaint.setColor(mCheckedColor);
 
         mTickPath = new Path();
@@ -264,15 +263,18 @@ public class SmoothCheckBox extends View implements Checkable {
     }
 
     private void drawCenter(Canvas canvas) {
-        mPaint.setColor(mUnCheckedColor);
-        float radius = (mCenterPoint.x - mStrokeWidth) * mScaleVal;
-        canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, radius, mPaint);
+      mPaint.setColor(mUnCheckedColor);
+      float radius = (mCenterPoint.x - mStrokeWidth) * mScaleVal;
+      canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, radius, mPaint);
     }
 
     private void drawBorder(Canvas canvas) {
+        float borderWidth = mCenterPoint.x * mFloorScale - (mCenterPoint.x - mStrokeWidth) * mScaleVal;
+        float radius = mCenterPoint.x * mFloorScale - borderWidth / 2;
         mFloorPaint.setColor(mFloorColor);
-        int radius = mCenterPoint.x;
-        canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, radius * mFloorScale, mFloorPaint);
+        mFloorPaint.setStrokeWidth(borderWidth);
+        mFloorPaint.setStyle(isChecked() ? Style.FILL_AND_STROKE : Style.STROKE);
+        canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, radius, mFloorPaint);
     }
 
     private void drawTick(Canvas canvas) {
@@ -325,7 +327,6 @@ public class SmoothCheckBox extends View implements Checkable {
 
         // invalidate
         if (mDrewDistance < mLeftLineDistance + mRightLineDistance) {
-            Log.d("Test : ", mTickSpeed + "");
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
