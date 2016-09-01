@@ -29,6 +29,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Checkable;
@@ -51,6 +52,7 @@ public class SmoothCheckBox extends View implements Checkable {
 
     private static final int DEF_DRAW_SIZE     = 25;
     private static final int DEF_ANIM_DURATION = 300;
+    private static final float DEF_TICK_SPEED    = 20.0f;
 
     private Paint mPaint, mTickPaint, mFloorPaint;
     private Point[] mTickPoints;
@@ -58,7 +60,7 @@ public class SmoothCheckBox extends View implements Checkable {
     private Path mTickPath;
 
     private float mLeftLineDistance, mRightLineDistance, mDrewDistance;
-    private float mScaleVal = 1.0f, mFloorScale = 1.0f;
+    private float mScaleVal = 1.0f, mFloorScale = 1.0f, mTickSpeed;
     private int mWidth, mAnimDuration, mStrokeWidth;
     private int mCheckedColor, mUnCheckedColor, mFloorColor, mFloorUnCheckedColor;
 
@@ -90,11 +92,14 @@ public class SmoothCheckBox extends View implements Checkable {
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.SmoothCheckBox);
         int tickColor = ta.getColor(R.styleable.SmoothCheckBox_color_tick, COLOR_TICK);
         mAnimDuration = ta.getInt(R.styleable.SmoothCheckBox_duration, DEF_ANIM_DURATION);
+        mTickSpeed = ta.getFloat(R.styleable.SmoothCheckBox_tick_speed, DEF_TICK_SPEED);
         mFloorColor = ta.getColor(R.styleable.SmoothCheckBox_color_unchecked_stroke, COLOR_FLOOR_UNCHECKED);
         mCheckedColor = ta.getColor(R.styleable.SmoothCheckBox_color_checked, COLOR_CHECKED);
         mUnCheckedColor = ta.getColor(R.styleable.SmoothCheckBox_color_unchecked, COLOR_UNCHECKED);
         mStrokeWidth = ta.getDimensionPixelSize(R.styleable.SmoothCheckBox_stroke_width, CompatUtils.dp2px(getContext(), 0));
         ta.recycle();
+
+        Log.d("Test", mTickSpeed + " " + DEF_TICK_SPEED);
 
         mFloorUnCheckedColor = mFloorColor;
         mTickPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -280,7 +285,7 @@ public class SmoothCheckBox extends View implements Checkable {
         mTickPath.reset();
         // draw left of the tick
         if (mDrewDistance < mLeftLineDistance) {
-            float step = (mWidth / 20.0f) < 3 ? 3 : (mWidth / 20.0f);
+            float step = (mWidth / mTickSpeed) < 1 ? 1 : (mWidth / mTickSpeed);
             mDrewDistance += step;
             float stopX = mTickPoints[0].x + (mTickPoints[1].x - mTickPoints[0].x) * mDrewDistance / mLeftLineDistance;
             float stopY = mTickPoints[0].y + (mTickPoints[1].y - mTickPoints[0].y) * mDrewDistance / mLeftLineDistance;
@@ -308,7 +313,7 @@ public class SmoothCheckBox extends View implements Checkable {
                 mTickPath.lineTo(stopX, stopY);
                 canvas.drawPath(mTickPath, mTickPaint);
 
-                float step = (mWidth / 20) < 3 ? 3 : (mWidth / 20);
+                float step = (mWidth / mTickSpeed) < 1 ? 1 : (mWidth / mTickSpeed);
                 mDrewDistance += step;
             } else {
                 mTickPath.reset();
@@ -320,6 +325,7 @@ public class SmoothCheckBox extends View implements Checkable {
 
         // invalidate
         if (mDrewDistance < mLeftLineDistance + mRightLineDistance) {
+            Log.d("Test : ", mTickSpeed + "");
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
